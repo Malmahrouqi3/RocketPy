@@ -3565,7 +3565,7 @@ class Function:  # pylint: disable=too-many-public-methods
                 extrapolation = "natural"
         return extrapolation
 
-    def to_dict(self, include_outputs=False):  # pylint: disable=unused-argument
+    def to_dict(self, **kwargs):  # pylint: disable=unused-argument
         """Serializes the Function instance to a dictionary.
 
         Returns
@@ -3576,7 +3576,10 @@ class Function:  # pylint: disable=too-many-public-methods
         source = self.source
 
         if callable(source):
-            source = to_hex_encode(source)
+            if kwargs.get("allow_pickle", True):
+                source = to_hex_encode(source)
+            else:
+                source = source.__name__
 
         return {
             "source": source,
